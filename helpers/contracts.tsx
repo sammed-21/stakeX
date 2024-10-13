@@ -5,8 +5,8 @@ import stakeXAbi from "@/abi/stakeXAbi.json";
 import stakeXAbiToken from "@/abi/stakeXTokenAbi.json";
 import ethers from "ethers";
 
-export const StakingX = (provider) =>
-  new Contract(StakingXAddress, stakeXAbi, provider);
+export const StakingX = (provider: any) =>
+  new ethers.Contract(StakingXAddress, stakeXAbi, provider);
 
-export const StakingXToken = (provider) =>
-  new Contract(StakingXTokenAddress, stakeXAbiToken, provider);
+export const StakingXToken = (provider: any) =>
+  new ethers.Contract(StakingXTokenAddress, stakeXAbiToken, provider);
