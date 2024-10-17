@@ -8,16 +8,16 @@ import {
 interface Web3State {
   provider: ethers.BrowserProvider | null;
   signer: ethers.Signer | null;
-  stakingXContract: ethers.Contract | null;
-  stakingXTokenContract: ethers.Contract | null;
+  stakingXContract?: ethers.Contract;
+  stakingXTokenContract?: ethers.Contract;
   connectWallet: () => Promise<void>;
 }
 
 const defaultWeb3State: Web3State = {
   provider: null,
   signer: null,
-  stakingXContract: null,
-  stakingXTokenContract: null,
+  stakingXContract: undefined,
+  stakingXTokenContract: undefined,
   connectWallet: async () => {},
 };
 
@@ -32,22 +32,22 @@ export const Web3ContextProvider = ({
 }) => {
   const [provider, setProvider] = useState<ethers.BrowserProvider | null>(null);
   const [signer, setSigner] = useState<ethers.Signer | null>(null);
-  const [stakingXContract, setStakingXContract] =
-    useState<ethers.Contract | null>(null);
+  const [stakingXContract, setStakingXContract] = useState<ethers.Contract>();
   const [stakingXTokenContract, setStakingXTokenContract] =
-    useState<ethers.Contract | null>(null);
+    useState<ethers.Contract>();
 
   // Define the connectWallet function
   const connectWallet = async () => {
     if (window.ethereum) {
       const web3Provider = new ethers.BrowserProvider(window.ethereum);
+
       setProvider(web3Provider);
 
       const signer = await web3Provider.getSigner();
       setSigner(signer);
 
       const stakingContract = getStakingXContract(signer);
-      const stakingTokenContract = getStakingXTokenContract(signer);
+      const stakingTokenContract = getStakingXTokenContract(web3Provider!);
 
       setStakingXContract(stakingContract);
       setStakingXTokenContract(stakingTokenContract);
