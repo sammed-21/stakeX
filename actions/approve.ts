@@ -2,7 +2,7 @@ import { getStakingXTokenContract } from "@/constants/contracts";
 import { ethers } from "ethers";
 import { parseEther } from "viem";
 
-export const handleApprove = async (props: ethers.BrowserProvider) => {
+export const handleApprove = async (props: ethers.Signer) => {
   const amountToApprove = parseEther("100"); // Example amount
   const stakingXTokenContract = await getStakingXTokenContract(props);
   if (stakingXTokenContract && props) {
