@@ -1,15 +1,18 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 import { ethers } from "ethers";
 import {
   getStakingXContract,
   getStakingXTokenContract,
 } from "@/constants/contracts";
+import { useAccount, useChainId } from "wagmi";
 
 interface Web3State {
   provider: ethers.BrowserProvider | null;
   signer: ethers.Signer | null;
   stakingXContract?: ethers.Contract;
   stakingXTokenContract?: ethers.Contract;
+  chainId?: string | number;
+  address?: string | null;
   connectWallet: () => Promise<void>;
 }
 
@@ -18,6 +21,8 @@ const defaultWeb3State: Web3State = {
   signer: null,
   stakingXContract: undefined,
   stakingXTokenContract: undefined,
+  chainId: undefined,
+  address: undefined,
   connectWallet: async () => {},
 };
 
@@ -30,36 +35,56 @@ export const Web3ContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
+  const chainid = useChainId();
+  const { address: Address } = useAccount();
   const [provider, setProvider] = useState<ethers.BrowserProvider | null>(null);
   const [signer, setSigner] = useState<ethers.Signer | null>(null);
   const [stakingXContract, setStakingXContract] = useState<ethers.Contract>();
+  const [chainId, setChainId] = useState<string | number>("");
+  const [address, setAddress] = useState<string | null>();
   const [stakingXTokenContract, setStakingXTokenContract] =
     useState<ethers.Contract>();
 
   // Define the connectWallet function
   const connectWallet = async () => {
     if (window.ethereum) {
-      const web3Provider = new ethers.BrowserProvider(window.ethereum);
+      try {
+        // Check if there's already a pending eth_requestAccounts call
+        const web3Provider = new ethers.BrowserProvider(window.ethereum);
 
-      setProvider(web3Provider);
+        // Ensure that user wallet connection is done only once
+        await window.ethereum.request({ method: "eth_requestAccounts" });
 
-      const signer = await web3Provider.getSigner();
-      setSigner(signer);
+        setProvider(web3Provider);
 
-      const stakingContract = getStakingXContract(signer);
-      const stakingTokenContract = getStakingXTokenContract(web3Provider!);
+        const signer = await web3Provider?.getSigner();
+        setSigner(signer);
 
-      setStakingXContract(stakingContract);
-      setStakingXTokenContract(stakingTokenContract);
+        const stakingContract = getStakingXContract(signer);
+        const stakingTokenContract = getStakingXTokenContract(web3Provider!);
+        setChainId(chainid);
+        setAddress(Address);
+        setStakingXContract(stakingContract);
+        setStakingXTokenContract(stakingTokenContract);
+      } catch (error: any) {
+        if (error.code === -32002) {
+          console.error(
+            "There is already a pending connection request. Please check MetaMask."
+          );
+          alert(
+            "A connection request is already pending. Please check MetaMask."
+          );
+        } else {
+          console.error("Error connecting to wallet:", error);
+        }
+      }
     } else {
       console.error("Ethereum provider not found. Please install MetaMask.");
+      alert("Ethereum provider not found. Please install MetaMask.");
     }
   };
 
   // Initialize Web3 on component mount
-  useEffect(() => {
-    connectWallet(); // Optionally connect on mount
-  }, []);
 
   // Return the Web3Context.Provider with proper value types from Web3State interface
   return (
@@ -68,6 +93,8 @@ export const Web3ContextProvider = ({
         provider,
         signer,
         stakingXContract,
+        chainId,
+        address,
         stakingXTokenContract,
         connectWallet, // Ensure the connectWallet function is passed
       }}
