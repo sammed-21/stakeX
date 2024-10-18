@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useWeb3Context } from "@/context/Web3Context";
-import { formatEther, parseEther } from "ethers";
+import { formatEther, formatUnits, parseEther } from "ethers";
 import { useAccount } from "wagmi";
 import { handleApprove } from "@/actions/approve";
 
@@ -8,6 +8,8 @@ export const StakingComponent = () => {
   const { stakingXContract, stakingXTokenContract, signer } = useWeb3Context();
 
   const { address } = useAccount();
+
+  console.log(address);
   const [amount, setAmount] = useState<number>(0);
   const [stakeXTokenBalance, setStakeXTokenBalance] = useState<string>("0");
   const [stakeBalance, setStakeBalance] = useState<string>("0");
@@ -16,13 +18,13 @@ export const StakingComponent = () => {
 
   useEffect(() => {
     const fetchBalanceAndRewards = async () => {
-      if (stakingXContract && stakingXTokenContract && signer) {
-        const userAddress = await signer.getAddress();
-        const userBalance = await stakingXContract.stakedBalance(userAddress);
-        const userRewards = await stakingXContract.earned(userAddress);
-        const balances = await stakingXTokenContract.balanceOf(address);
-
-        setStakeXTokenBalance(formatEther(balances));
+      if (stakingXContract && stakingXTokenContract && signer && address) {
+        const userAddress = await signer?.getAddress();
+        const userBalance = await stakingXContract?.stakedBalance(userAddress);
+        const userRewards = await stakingXContract?.earned(userAddress);
+        const balances = await stakingXTokenContract?.balanceOf(address);
+        setStakeXTokenBalance(formatUnits(balances));
+        console.log(stakeXTokenBalance);
         setStakeBalance(formatEther(userBalance));
         setRewards(formatEther(userRewards));
       }
@@ -45,7 +47,7 @@ export const StakingComponent = () => {
         }
 
         // Step 2: Stake tokens
-        const stakeTx = await stakingXContract.stake(amountInWei);
+        const stakeTx = await stakingXContract?.stake(amountInWei);
         await stakeTx.wait(); // Wait for the staking transaction to complete
         alert("Tokens staked successfully!");
 
