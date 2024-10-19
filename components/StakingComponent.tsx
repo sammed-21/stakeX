@@ -20,7 +20,7 @@ export const StakingComponent = () => {
     const fetchBalanceAndRewards = async () => {
       if (stakingXContract && stakingXTokenContract && signer && address) {
         const userAddress = await signer?.getAddress();
-        const userBalance = await stakingXContract?.stakedBalance(userAddress);
+        const userBalance = await stakingXContract?.stakedBalance(address);
         const userRewards = await stakingXContract?.earned(userAddress);
         const balances = await stakingXTokenContract?.balanceOf(address);
         setStakeXTokenBalance(formatUnits(balances));
