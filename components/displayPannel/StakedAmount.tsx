@@ -1,19 +1,36 @@
+import { useStakingContext } from "@/context/StakingContext";
 import { useWeb3Context } from "@/context/Web3Context";
+import { formatUnits } from "ethers";
 import React, { useEffect, useState } from "react";
 
 export const StakedAmount = () => {
-  const { stakingXContract, address } = useWeb3Context();
-  const [stakedAmount, setStakedAmount] = useState<string | null>("0");
+  const { stakingXContract, address, loading } = useWeb3Context();
+  const [stakedAmount, setStakedAmount] = useState<string>("0");
+  const { isReload } = useStakingContext();
   useEffect(() => {
     const fetchStakedBalance = async () => {
       try {
+        if (!stakingXContract || !address) return;
+
+        // Fetch staked balance (BigInt)
         const amountStaked = await stakingXContract.stakedBalance(address);
-        console.log("amount", amountStaked);
+
+        // Convert the BigInt to string, then format it to Ether units (18 decimals)
+        const amountStakedEth = formatUnits(amountStaked.toString(), 18);
+
+        console.log("Formatted staked amount:", amountStakedEth);
+        setStakedAmount(amountStakedEth);
       } catch (error) {
-        console.log(error.message);
+        console.error("Error fetching staked balance:", error.message);
       }
     };
-    fetchStakedBalance();
-  }, []);
-  return <div>StakedAmount</div>;
+
+    if (stakingXContract) {
+      fetchStakedBalance();
+    }
+  }, [stakingXContract, address, isReload]);
+
+  return (
+    <div className="w-full text-white ">Staked amount: {stakedAmount}</div>
+  );
 };

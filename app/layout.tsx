@@ -4,6 +4,7 @@ import "./globals.css";
 
 import "@rainbow-me/rainbowkit/styles.css";
 import { Providers } from "@/components/Providers";
+import { Toaster } from "react-hot-toast";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -31,7 +32,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Providers>{children}</Providers>
+        <Providers>
+          <Toaster position="bottom-right" />
+          {children}
+        </Providers>
       </body>
     </html>
   );

@@ -12,7 +12,9 @@ interface Web3State {
   stakingXContract?: ethers.Contract;
   stakingXTokenContract?: ethers.Contract;
   chainId?: string | number;
+  loading: boolean;
   address?: string | null;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   connectWallet: () => Promise<void>;
 }
 
@@ -23,6 +25,8 @@ const defaultWeb3State: Web3State = {
   stakingXTokenContract: undefined,
   chainId: undefined,
   address: undefined,
+  setLoading: () => {},
+  loading: false,
   connectWallet: async () => {},
 };
 
@@ -42,6 +46,7 @@ export const Web3ContextProvider = ({
   const [stakingXContract, setStakingXContract] = useState<ethers.Contract>();
   const [chainId, setChainId] = useState<string | number>("");
   const [address, setAddress] = useState<string | null>();
+  const [loading, setLoading] = useState<boolean>(false);
   const [stakingXTokenContract, setStakingXTokenContract] =
     useState<ethers.Contract>();
 
@@ -50,6 +55,7 @@ export const Web3ContextProvider = ({
     if (window.ethereum) {
       try {
         // Check if there's already a pending eth_requestAccounts call
+        setLoading(true);
         const web3Provider = new ethers.BrowserProvider(window.ethereum);
 
         // Ensure that user wallet connection is done only once
@@ -61,11 +67,12 @@ export const Web3ContextProvider = ({
         setSigner(signer);
 
         const stakingContract = getStakingXContract(signer);
-        const stakingTokenContract = getStakingXTokenContract(web3Provider!);
+        const stakingTokenContract = getStakingXTokenContract(signer!);
         setChainId(chainid);
         setAddress(Address);
         setStakingXContract(stakingContract);
         setStakingXTokenContract(stakingTokenContract);
+        setLoading(false);
       } catch (error: any) {
         if (error.code === -32002) {
           console.error(
@@ -77,6 +84,8 @@ export const Web3ContextProvider = ({
         } else {
           console.error("Error connecting to wallet:", error);
         }
+      } finally {
+        setLoading(false);
       }
     } else {
       console.error("Ethereum provider not found. Please install MetaMask.");
@@ -94,7 +103,9 @@ export const Web3ContextProvider = ({
         signer,
         stakingXContract,
         chainId,
+        loading,
         address,
+        setLoading,
         stakingXTokenContract,
         connectWallet, // Ensure the connectWallet function is passed
       }}
