@@ -6,7 +6,6 @@ import toast from "react-hot-toast";
 
 const ClaimReward = () => {
   const { stakingXContract } = useWeb3Context();
-  const [trxnStatus, setTrxnStatus] = useState<string | null>("");
 
   const claimReward = async () => {
     try {
@@ -26,8 +25,6 @@ const ClaimReward = () => {
 
   return (
     <div>
-      {trxnStatus && <div>{trxnStatus}</div>}
-
       <Button
         onClick={claimReward}
         type="submit"

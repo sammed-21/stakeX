@@ -1,6 +1,5 @@
 "use client";
 
-import ClaimReward from "@/components/claimReward/ClaimReward";
 import ConnectedNetwork from "@/components/ConnectedNetwork";
 import { DisplayPannel } from "@/components/displayPannel/DisplayPannel";
 import Navbar from "@/components/Navbar";
@@ -22,7 +21,6 @@ export default function Home() {
         <Withdraw />
       </StakingContextProvider>
       <AmountApproval />
-      <ClaimReward />
     </div>
   );
 }

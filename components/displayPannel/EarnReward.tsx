@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 type Props = {};
 
 const EarnReward = (props: Props) => {
-  const { stakingXContract, address, loading } = useWeb3Context();
+  const { stakingXContract, address } = useWeb3Context();
 
   const [earnedRewardRate, setEarnedRewardRate] = useState<string | null>("0");
   useEffect(() => {
