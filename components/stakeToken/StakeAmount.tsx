@@ -6,9 +6,8 @@ import { useStakingContext } from "@/context/StakingContext";
 import toast from "react-hot-toast";
 
 const StakeAmount = () => {
-  const { stakingXContract, stakingXTokenContract } = useWeb3Context();
+  const { stakingXContract } = useWeb3Context();
   const { setIsReload, isReload } = useStakingContext();
-  const [trxnStatus, setTrxnStatus] = useState<string | null>("");
   const stakeAmountRef = useRef<HTMLInputElement>("");
 
   const stakeToken = async (e: React.FormEvent) => {
@@ -34,19 +33,6 @@ const StakeAmount = () => {
       });
       stakeAmountRef.current.value = "";
       setIsReload(!isReload);
-      //   console.log(transaction);
-      //   setTrxnStatus("trsaction is in pending....");
-      //   const recipt = await transaction.wait();
-      //   if (recipt.status == 1) {
-      //     setTrxnStatus("transaction is successfull");
-      //     setIsReload(!isReload);
-      //     setTimeout(() => {
-      //       setTrxnStatus("");
-      //     }, 5000);
-      //     stakeAmountRef.current.value = "";
-      //   } else {
-      //     setTrxnStatus("transaction failed");
-      //   }
     } catch (error) {
       console.error("stakeing failed", error.message);
     }
@@ -54,17 +40,21 @@ const StakeAmount = () => {
 
   return (
     <div>
-      {trxnStatus && <div>{trxnStatus}</div>}
+      <form onSubmit={stakeToken} className="flex flex-col justify-start gap-3">
+        <label htmlFor="approval" className="">
+          Stake Tokens:
+        </label>
 
-      <form onSubmit={stakeToken}>
-        <label htmlFor="approval">stake token:</label>
-        <input
-          className="text-black"
-          id="approval"
-          type="text"
-          ref={stakeAmountRef}
-        ></input>
-        <Button type="submit" label="Enter amount" className={null} />
+        <div className="h-20 bg-white rounded-lg w-full">
+          <input
+            className="text-black w-full  outline-0 border-0 px-3 flex   placeholder:text-gray-600 text-start items-start border-gray-500 h-10 justify-start rounded-lg"
+            id="stake"
+            type="text"
+            placeholder="Enter Amount"
+            ref={stakeAmountRef}
+          ></input>
+        </div>
+        <Button type="submit" className="w-full" label="Stake Amount" />
       </form>
     </div>
   );

@@ -1,13 +1,13 @@
 import { parseUnits } from "ethers";
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import Button from "../Button";
 import { useWeb3Context } from "@/context/Web3Context";
 import { useStakingContext } from "@/context/StakingContext";
 import toast from "react-hot-toast";
 
 const Withdraw = () => {
-  const { stakingXContract, stakingXTokenContract } = useWeb3Context();
-  const [trxnStatus, setTrxnStatus] = useState<string | null>("");
+  const { stakingXContract } = useWeb3Context();
+
   const WithdrawTokenRef = useRef<HTMLInputElement>("");
   const { setIsReload, isReload } = useStakingContext();
   const WithdrawToken = async (e: React.FormEvent) => {
@@ -34,18 +34,7 @@ const Withdraw = () => {
         success: "Transaction successful 👌",
         error: "Transaction failed 🤯",
       });
-      //   console.log(transaction);
-      //   setTrxnStatus("trsaction is in pending....");
       setIsReload(!isReload);
-      //   const recipt = await transaction.wait();
-      //   if (recipt.status == 1) {
-      //     setTrxnStatus("transaction is successfull");
-      //     setTimeout(() => {
-      //       setTrxnStatus("");
-      //     }, 5000);
-      //   } else {
-      //     setTrxnStatus("transaction failed");
-      //   }
     } catch (error) {
       console.error("token approval failed", error.message);
     }
@@ -53,17 +42,22 @@ const Withdraw = () => {
 
   return (
     <div>
-      {trxnStatus && <div>{trxnStatus}</div>}
-
-      <form onSubmit={WithdrawToken}>
+      <form
+        onSubmit={WithdrawToken}
+        className="flex flex-col justify-start gap-3"
+      >
         <label htmlFor="approval">Amount to Withdraw :</label>
-        <input
-          className="text-black"
-          id="approval"
-          type="text"
-          ref={WithdrawTokenRef}
-        ></input>
-        <Button type="submit" label="Enter amount" className={null} />
+
+        <div className="h-20 bg-white rounded-lg w-full">
+          <input
+            className="text-black w-full  outline-0 border-0 px-3 flex  placeholder:text-gray-600 text-start items-start border-gray-500 h-10 justify-start rounded-lg"
+            id="stake"
+            type="text"
+            placeholder="Enter Amount"
+            ref={WithdrawTokenRef}
+          ></input>
+        </div>
+        <Button className="w-full" type="submit" label="Enter amount" />
       </form>
     </div>
   );

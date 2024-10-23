@@ -5,7 +5,7 @@ import RewardRate from "./RewardRate";
 
 export const DisplayPannel = () => {
   return (
-    <div className="w-full bg-[#1b1b1b] rounded-lg border-[1px] border-[#b1b1b1] max-w-md flex flex-col gap-3">
+    <div className="w-full bg-[#2b2b2b] p-3 rounded-lg border-[1px] border-[#3b3b3b] max-w-lg flex flex-col gap-3">
       <StakedAmount />
       <EarnReward />
       <RewardRate />
