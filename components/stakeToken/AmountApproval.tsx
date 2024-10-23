@@ -41,15 +41,22 @@ const AmountApproval = () => {
 
   return (
     <div>
-      <form onSubmit={approveToken}>
+      <form
+        onSubmit={approveToken}
+        className="flex flex-col justify-start gap-3"
+      >
         <label htmlFor="approval">Token Approval:</label>
-        <input
-          className="text-black"
-          id="approval"
-          type="text"
-          ref={approveTokenRef}
-        ></input>
-        <Button type="submit" label="Enter amount" className={null} />
+        <div className="h-20 bg-white rounded-lg w-full">
+          <input
+            className="text-black w-full  outline-0 border-0 px-3 flex   placeholder:text-gray-600 text-start items-start border-gray-500 h-10 justify-start rounded-lg"
+            id="approval"
+            type="text"
+            placeholder="Enter Amount"
+            ref={approveTokenRef}
+          ></input>
+        </div>
+
+        <Button type="submit" className="w-full" label="Approve Amount" />
       </form>
     </div>
   );

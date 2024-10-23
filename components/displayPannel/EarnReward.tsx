@@ -32,7 +32,7 @@ const EarnReward = (props: Props) => {
       return () => clearInterval(interval);
     }, 20000);
   }, [stakingXContract, address]);
-  return <div>EarnReward:rewardRate:{earnedRewardRate}</div>;
+  return <div>EarnReward: {earnedRewardRate}</div>;
 };
 
 export default EarnReward;

@@ -5,7 +5,7 @@ import React from "react";
 interface ButtonProps {
   onClick?: () => void; // Function type for the onClick handler
   label: string; // Label for the button
-  className: string | null;
+  className?: string;
   type?: "button" | "submit" | "reset"; // Optional type prop for button type
 }
 

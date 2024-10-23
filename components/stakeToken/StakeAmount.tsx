@@ -40,15 +40,21 @@ const StakeAmount = () => {
 
   return (
     <div>
-      <form onSubmit={stakeToken}>
-        <label htmlFor="approval">stake token:</label>
-        <input
-          className="text-black"
-          id="approval"
-          type="text"
-          ref={stakeAmountRef}
-        ></input>
-        <Button type="submit" label="Enter amount" className={null} />
+      <form onSubmit={stakeToken} className="flex flex-col justify-start gap-3">
+        <label htmlFor="approval" className="">
+          Stake Tokens:
+        </label>
+
+        <div className="h-20 bg-white rounded-lg w-full">
+          <input
+            className="text-black w-full  outline-0 border-0 px-3 flex   placeholder:text-gray-600 text-start items-start border-gray-500 h-10 justify-start rounded-lg"
+            id="stake"
+            type="text"
+            placeholder="Enter Amount"
+            ref={stakeAmountRef}
+          ></input>
+        </div>
+        <Button type="submit" className="w-full" label="Stake Amount" />
       </form>
     </div>
   );

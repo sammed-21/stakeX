@@ -26,7 +26,7 @@ const RewardRate = (props: Props) => {
     }
   }, [stakingXContract, address]);
   return (
-    <div className="bg-green-600 w-full font-semibold">
+    <div className=" w-full font-semibold">
       RewardRate:{rewardRate} tokens / second
     </div>
   );
