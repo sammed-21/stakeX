@@ -13,7 +13,7 @@ const RewardRate = (props: Props) => {
       try {
         const rewardRateWei = await stakingXContract?.REWARD_RATE();
         const rewardRateEth = formatUnits(rewardRateWei.toString(), 18);
-        console.log("amount", rewardRateEth);
+
         const rounedReward = parseFloat(rewardRateEth).toFixed(2);
 
         setRewardRate(rounedReward);

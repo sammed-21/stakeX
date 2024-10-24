@@ -5,14 +5,7 @@ import { useEffect } from "react";
 import { useAccount } from "wagmi";
 
 export default function ConnectWallet() {
-  const { address } = useAccount();
   const { connectWallet } = useWeb3Context();
-
-  useEffect(() => {
-    if (address) {
-      connectWallet();
-    }
-  }, [address]);
 
   return (
     <div>
