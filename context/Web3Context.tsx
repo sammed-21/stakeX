@@ -1,6 +1,13 @@
-import React, { createContext, useContext, useState } from "react";
-import { ethers } from "ethers";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import {
+  ethers,
+  formatEther,
+  formatUnits,
+  parseEther,
+  parseUnits,
+} from "ethers";
+import {
+  getStakeFaucetContract,
   getStakingXContract,
   getStakingXTokenContract,
 } from "@/constants/contracts";
@@ -11,7 +18,9 @@ interface Web3State {
   signer: ethers.Signer | null;
   stakingXContract?: ethers.Contract;
   stakingXTokenContract?: ethers.Contract;
+  stakeFaucetContract?: ethers.Contract;
   chainId?: string | number;
+  stakeXTokenBalance?: string | number;
   loading: boolean;
   address?: string | null;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -23,7 +32,9 @@ const defaultWeb3State: Web3State = {
   signer: null,
   stakingXContract: undefined,
   stakingXTokenContract: undefined,
+  stakeFaucetContract: undefined,
   chainId: undefined,
+  stakeXTokenBalance: undefined,
   address: undefined,
   setLoading: () => {},
   loading: false,
@@ -44,6 +55,11 @@ export const Web3ContextProvider = ({
   const [provider, setProvider] = useState<ethers.BrowserProvider | null>(null);
   const [signer, setSigner] = useState<ethers.Signer | null>(null);
   const [stakingXContract, setStakingXContract] = useState<ethers.Contract>();
+  const [stakeFaucetContract, SetStakeFaucetContract] =
+    useState<ethers.Contract>();
+  const [stakeXTokenBalance, setStakeXTokenBalance] = useState<
+    string | number
+  >();
   const [chainId, setChainId] = useState<string | number>("");
   const [address, setAddress] = useState<string | null>();
   const [loading, setLoading] = useState<boolean>(false);
@@ -68,6 +84,17 @@ export const Web3ContextProvider = ({
 
         const stakingContract = getStakingXContract(signer);
         const stakingTokenContract = getStakingXTokenContract(signer!);
+        const stakeTokenBalance = await stakingTokenContract?.balanceOf(signer);
+        console.log(stakeTokenBalance);
+
+        // Convert the balance to a readable format (4 significant digits)
+        const formattedBalance = String(
+          formatUnits(stakeTokenBalance.toString(), 18)
+        );
+
+        setStakeXTokenBalance(formattedBalance);
+        const stakeFaucetContract = getStakeFaucetContract(signer);
+        SetStakeFaucetContract(stakeFaucetContract);
         setChainId(chainid);
         setAddress(Address);
         setStakingXContract(stakingContract);
@@ -77,9 +104,6 @@ export const Web3ContextProvider = ({
         if (error.code === -32002) {
           console.error(
             "There is already a pending connection request. Please check MetaMask."
-          );
-          alert(
-            "A connection request is already pending. Please check MetaMask."
           );
         } else {
           console.error("Error connecting to wallet:", error);
@@ -92,6 +116,11 @@ export const Web3ContextProvider = ({
       alert("Ethereum provider not found. Please install MetaMask.");
     }
   };
+  useEffect(() => {
+    if (!Address) {
+      connectWallet();
+    }
+  }, [Address]);
 
   // Initialize Web3 on component mount
 
@@ -105,7 +134,9 @@ export const Web3ContextProvider = ({
         chainId,
         loading,
         address,
+        stakeXTokenBalance,
         setLoading,
+        stakeFaucetContract,
         stakingXTokenContract,
         connectWallet, // Ensure the connectWallet function is passed
       }}

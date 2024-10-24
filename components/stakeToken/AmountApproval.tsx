@@ -1,3 +1,4 @@
+"use client";
 import { parseUnits } from "ethers";
 import React, { useRef, useState } from "react";
 import Button from "../Button";
@@ -5,8 +6,14 @@ import { useWeb3Context } from "@/context/Web3Context";
 import toast from "react-hot-toast";
 
 const AmountApproval = () => {
-  const { stakingXContract, stakingXTokenContract, loading, signer } =
-    useWeb3Context();
+  const {
+    stakingXContract,
+    stakingXTokenContract,
+    address,
+    stakeXTokenBalance,
+    loading,
+    signer,
+  } = useWeb3Context();
   const approveTokenRef = useRef<HTMLInputElement>("");
 
   const approveToken = async (e: React.FormEvent) => {
@@ -27,6 +34,7 @@ const AmountApproval = () => {
           stakingXContract?.target,
           amountToSend
         );
+        await stakingXTokenContract?.symbol();
       }
       await toast.promise(transaction.wait(), {
         loading: "Transaction is pending...",
@@ -46,7 +54,7 @@ const AmountApproval = () => {
         className="flex flex-col justify-start gap-3"
       >
         <label htmlFor="approval">Token Approval:</label>
-        <div className="h-20 bg-white rounded-lg w-full">
+        <div className="h-20 flex flex-col justify-between bg-white rounded-lg w-full">
           <input
             className="text-black w-full  outline-0 border-0 px-3 flex   placeholder:text-gray-600 text-start items-start border-gray-500 h-10 justify-start rounded-lg"
             id="approval"

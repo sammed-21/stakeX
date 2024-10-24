@@ -1,3 +1,4 @@
+"use cilent";
 import { useWeb3Context } from "@/context/Web3Context";
 import { formatUnits } from "ethers";
 import React, { useEffect, useState } from "react";
@@ -5,7 +6,7 @@ import React, { useEffect, useState } from "react";
 type Props = {};
 
 const EarnReward = (props: Props) => {
-  const { stakingXContract, address } = useWeb3Context();
+  const { stakingXContract, address, signer } = useWeb3Context();
 
   const [earnedRewardRate, setEarnedRewardRate] = useState<string | null>("0");
   useEffect(() => {
@@ -31,7 +32,7 @@ const EarnReward = (props: Props) => {
 
       return () => clearInterval(interval);
     }, 20000);
-  }, [stakingXContract, address]);
+  }, [stakingXContract, address, signer]);
   return <div>EarnReward: {earnedRewardRate}</div>;
 };
 

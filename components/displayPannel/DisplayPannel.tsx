@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { StakedAmount } from "./StakedAmount";
 import EarnReward from "./EarnReward";
