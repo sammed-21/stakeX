@@ -20,8 +20,11 @@ export const StakedAmount = () => {
 
         console.log("Formatted staked amount:", amountStakedEth);
         setStakedAmount(amountStakedEth);
-      } catch (error) {
-        console.error("Error fetching staked balance:", error.message);
+      } catch (error: unknown) {
+        console.error(
+          "Error fetching staked balance:",
+          (error as Error).message
+        );
       }
     };
 

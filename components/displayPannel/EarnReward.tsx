@@ -19,8 +19,8 @@ const EarnReward = () => {
         const rounedReward = parseFloat(earnedRewardRateEth).toFixed(2);
 
         setEarnedRewardRate(rounedReward);
-      } catch (error) {
-        console.log(error?.message);
+      } catch (error: unknown) {
+        console.log((error as Error)?.message);
       }
     };
     const interval = setInterval(() => {

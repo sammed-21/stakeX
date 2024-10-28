@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 const Withdraw = () => {
   const { stakingXContract } = useWeb3Context();
 
-  const WithdrawTokenRef = useRef<HTMLInputElement>("");
+  const WithdrawTokenRef = useRef<HTMLInputElement>(null);
   const { setIsReload, isReload } = useStakingContext();
   const WithdrawToken = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,15 +28,17 @@ const Withdraw = () => {
           amountToWithdraw
         );
       }
-      WithdrawTokenRef.current.value = "";
+      if (WithdrawTokenRef.current) {
+        WithdrawTokenRef.current.value = ""; // Reset input field
+      }
       await toast.promise(transaction.wait(), {
         loading: "Transaction is pending...",
         success: "Transaction successful 👌",
         error: "Transaction failed 🤯",
       });
       setIsReload(!isReload);
-    } catch (error) {
-      console.error("token approval failed", error.message);
+    } catch (error: unknown) {
+      console.error("token approval failed", (error as Error).message);
     }
   };
 

@@ -100,14 +100,8 @@ export const Web3ContextProvider = ({
         setStakingXContract(stakingContract);
         setStakingXTokenContract(stakingTokenContract);
         setLoading(false);
-      } catch (error: any) {
-        if (error.code === -32002) {
-          console.error(
-            "There is already a pending connection request. Please check MetaMask."
-          );
-        } else {
-          console.error("Error connecting to wallet:", error);
-        }
+      } catch (error: unknown) {
+        console.error("Error connecting to wallet:", error as Error);
       } finally {
         setLoading(false);
       }

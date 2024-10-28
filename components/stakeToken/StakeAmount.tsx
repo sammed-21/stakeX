@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 const StakeAmount = () => {
   const { stakingXContract } = useWeb3Context();
   const { setIsReload, isReload } = useStakingContext();
-  const stakeAmountRef = useRef<HTMLInputElement>("");
+  const stakeAmountRef = useRef<HTMLInputElement>(null);
 
   const stakeToken = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,10 +31,12 @@ const StakeAmount = () => {
         success: "Transaction successful 👌",
         error: "Transaction failed 🤯",
       });
-      stakeAmountRef.current.value = "";
+      if (stakeAmountRef.current) {
+        stakeAmountRef.current.value = ""; // Reset input field
+      }
       setIsReload(!isReload);
-    } catch (error) {
-      console.error("stakeing failed", error.message);
+    } catch (error: unknown) {
+      console.error("stakeing failed", (error as Error).message);
     }
   };
 

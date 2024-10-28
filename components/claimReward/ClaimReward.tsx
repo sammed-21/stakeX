@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import Button from "../Button";
 import { useWeb3Context } from "@/context/Web3Context";
@@ -17,8 +18,12 @@ const ClaimReward = () => {
         success: "Transaction successful 👌",
         error: "Transaction failed 🤯",
       });
-    } catch (error) {
-      console.error("token approval failed", error.message);
+    } catch (error: unknown) {
+      console.error(
+        "Error requesting tokens:",
+        (error as Error).message || "Transaction failed"
+      );
+      toast.error(`Error: ${(error as Error).message || "Transaction failed"}`);
     }
   };
 

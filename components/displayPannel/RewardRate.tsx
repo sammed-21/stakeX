@@ -15,8 +15,8 @@ const RewardRate = () => {
         const rounedReward = parseFloat(rewardRateEth).toFixed(2);
 
         setRewardRate(rounedReward);
-      } catch (error) {
-        console.log(error?.message);
+      } catch (error: unknown) {
+        console.log((error as Error)?.message);
       }
     };
     if (stakingXContract) {

@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 
 const AmountApproval = () => {
   const { stakingXContract, stakingXTokenContract } = useWeb3Context();
-  const approveTokenRef = useRef<HTMLInputElement>("");
+  const approveTokenRef = useRef<HTMLInputElement>(null);
 
   const approveToken = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,9 +34,11 @@ const AmountApproval = () => {
         success: "Transaction successful 👌",
         error: "Transaction failed 🤯",
       });
-      approveTokenRef.current.value = "";
-    } catch (error) {
-      console.error("token approval failed", error.message);
+      if (approveTokenRef.current) {
+        approveTokenRef.current.value = ""; // Reset input field
+      }
+    } catch (error: unknown) {
+      console.error("token approval failed", (error as Error).message);
     }
   };
 

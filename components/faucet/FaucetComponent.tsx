@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { formatUnits } from "ethers";
 import { useWeb3Context } from "@/context/Web3Context";
 import toast from "react-hot-toast";
@@ -16,10 +17,6 @@ export const FaucetComponent = () => {
   const [faucetBalance, setFaucetBalance] = useState<string>("0");
 
   useEffect(() => {
-    checkCooldown();
-  }, [address]);
-
-  useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
 
     if (cooldownLeft > 0) {
@@ -33,7 +30,7 @@ export const FaucetComponent = () => {
     };
   }, [cooldownLeft]);
 
-  const checkCooldown = async () => {
+  const checkCooldown = useCallback(async () => {
     if (!stakeFaucetContract || !signer) return;
     try {
       const userAddress = await signer.getAddress();
@@ -62,10 +59,10 @@ export const FaucetComponent = () => {
 
       // Update the cooldownLeft state
       setCooldownLeft(cooldownLeftInSeconds > 0 ? cooldownLeftInSeconds : 0);
-    } catch (error) {
-      console.error("Error checking cooldown:", error);
+    } catch (error: unknown) {
+      console.error("Error checking cooldown:", error as Error);
     }
-  };
+  }, [signer, stakeFaucetContract]);
 
   const requestTokens = async () => {
     if (!stakeFaucetContract || !signer) {
@@ -104,12 +101,12 @@ export const FaucetComponent = () => {
       await addContractToMetamask();
 
       checkCooldown();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error(
         "Error requesting tokens:",
-        error.message || "Transaction failed"
+        (error as Error).message || "Transaction failed"
       );
-      toast.error(`Error: ${error.message || "Transaction failed"}`);
+      toast.error(`Error: ${(error as Error).message || "Transaction failed"}`);
     } finally {
       setIsLoading(false);
     }
@@ -133,12 +130,15 @@ export const FaucetComponent = () => {
             },
           },
         });
-      } catch (error) {
-        console.error("Error adding contract to MetaMask:", error);
+      } catch (error: unknown) {
+        console.error("Error adding contract to MetaMask:", error as Error);
       }
     }
   };
 
+  useEffect(() => {
+    checkCooldown();
+  }, [checkCooldown, address]);
   return (
     <div className="max-w-[520px] border-[1px] bg-[#2b2b2b] mt-10 border-[#3b3b3b] w-full h-full flex flex-col gap-4 p-4 rounded-lg shadow-lg">
       <h2 className="text-lg font-bold">StakeX Token Faucet</h2>
