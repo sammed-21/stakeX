@@ -2,10 +2,8 @@ import { useWeb3Context } from "@/context/Web3Context";
 import { formatUnits } from "ethers";
 import React, { useEffect, useState } from "react";
 
-type Props = {};
-
-const RewardRate = (props: Props) => {
-  const { stakingXContract, address, loading } = useWeb3Context();
+const RewardRate = () => {
+  const { stakingXContract, address } = useWeb3Context();
 
   const [rewardRate, setRewardRate] = useState<string | null>("0");
   useEffect(() => {

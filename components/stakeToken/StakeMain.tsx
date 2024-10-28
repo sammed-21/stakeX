@@ -8,9 +8,8 @@ import AmountApproval from "@/components/stakeToken/AmountApproval";
 import Withdraw from "@/components/withdraw/Withdraw";
 import { useWeb3Context } from "@/context/Web3Context";
 import { useAccount } from "wagmi";
-type Props = {};
 
-const StakeMain = (props: Props) => {
+const StakeMain = () => {
   const { stakeXTokenBalance } = useWeb3Context();
   const { address } = useAccount();
   return (

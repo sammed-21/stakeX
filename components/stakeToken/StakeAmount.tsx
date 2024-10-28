@@ -1,5 +1,5 @@
 import { parseUnits } from "ethers";
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import Button from "../Button";
 import { useWeb3Context } from "@/context/Web3Context";
 import { useStakingContext } from "@/context/StakingContext";

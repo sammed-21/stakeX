@@ -4,7 +4,7 @@ import { formatUnits } from "ethers";
 import React, { useEffect, useState } from "react";
 
 export const StakedAmount = () => {
-  const { stakingXContract, address, loading } = useWeb3Context();
+  const { stakingXContract, address } = useWeb3Context();
   const [stakedAmount, setStakedAmount] = useState<string>("0");
   const { isReload } = useStakingContext();
   useEffect(() => {

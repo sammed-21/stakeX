@@ -6,7 +6,7 @@ interface ButtonProps {
   onClick?: () => void; // Function type for the onClick handler
   label: string; // Label for the button
   className?: string;
-  disabled?: any;
+  disabled?: boolean;
   type?: "button" | "submit" | "reset"; // Optional type prop for button type
 }
 

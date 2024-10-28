@@ -1,5 +1,4 @@
-import { parseUnits } from "ethers";
-import React, { useRef, useState } from "react";
+import React from "react";
 import Button from "../Button";
 import { useWeb3Context } from "@/context/Web3Context";
 import toast from "react-hot-toast";

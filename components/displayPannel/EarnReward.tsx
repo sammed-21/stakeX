@@ -3,9 +3,7 @@ import { useWeb3Context } from "@/context/Web3Context";
 import { formatUnits } from "ethers";
 import React, { useEffect, useState } from "react";
 
-type Props = {};
-
-const EarnReward = (props: Props) => {
+const EarnReward = () => {
   const { stakingXContract, address, signer } = useWeb3Context();
 
   const [earnedRewardRate, setEarnedRewardRate] = useState<string | null>("0");

@@ -1,19 +1,12 @@
 "use client";
 import { parseUnits } from "ethers";
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import Button from "../Button";
 import { useWeb3Context } from "@/context/Web3Context";
 import toast from "react-hot-toast";
 
 const AmountApproval = () => {
-  const {
-    stakingXContract,
-    stakingXTokenContract,
-    address,
-    stakeXTokenBalance,
-    loading,
-    signer,
-  } = useWeb3Context();
+  const { stakingXContract, stakingXTokenContract } = useWeb3Context();
   const approveTokenRef = useRef<HTMLInputElement>("");
 
   const approveToken = async (e: React.FormEvent) => {

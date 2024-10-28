@@ -5,31 +5,17 @@ import { useWeb3Context } from "@/context/Web3Context";
 import toast from "react-hot-toast";
 import ConnectWallet from "../ConnectWallet";
 import { useAccount } from "wagmi";
+import { StakingXTokenAddress } from "@/constants/contracts";
 
 export const FaucetComponent = () => {
-  const {
-    stakeFaucetContract,
-    stakingXTokenContract,
-    signer,
-
-    connectWallet,
-  } = useWeb3Context();
+  const { stakeFaucetContract, stakingXTokenContract, signer } =
+    useWeb3Context();
   const { address } = useAccount();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [cooldownLeft, setCooldownLeft] = useState<number>(0);
   const [faucetBalance, setFaucetBalance] = useState<string>("0");
 
-  const getBalances = async () => {
-    if (stakeFaucetContract && stakingXTokenContract) {
-      const balance = await stakingXTokenContract?.balanceOf(
-        stakeFaucetContract.getAddress()
-      );
-      setFaucetBalance(formatUnits(balance, 18));
-    }
-  };
-
   useEffect(() => {
-    getBalances();
     checkCooldown();
   }, [address]);
 
@@ -131,9 +117,9 @@ export const FaucetComponent = () => {
 
   const addContractToMetamask = async () => {
     if (window.ethereum) {
-      const contractAddress = stakingXTokenContract?.address; // Replace with your contract's address
-      const tokenSymbol = "STX"; // Replace with your token's symbol
-      const tokenDecimals = 18; // Replace with your token's decimals
+      const contractAddress = StakingXTokenAddress;
+      const tokenSymbol = "STX";
+      const tokenDecimals = 18;
 
       try {
         await window.ethereum.request({
@@ -154,7 +140,7 @@ export const FaucetComponent = () => {
   };
 
   return (
-    <div className="max-w-[600px] border-[1px] border-[#1b1b1b] w-full h-full flex flex-col gap-4 p-4 rounded-lg shadow-lg">
+    <div className="max-w-[520px] border-[1px] bg-[#2b2b2b] mt-10 border-[#3b3b3b] w-full h-full flex flex-col gap-4 p-4 rounded-lg shadow-lg">
       <h2 className="text-lg font-bold">StakeX Token Faucet</h2>
       {/* <p className="text-md">
         Faucet Balance:{" "}
