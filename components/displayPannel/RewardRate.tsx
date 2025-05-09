@@ -1,9 +1,11 @@
+import { useStakingContext } from "@/context/StakingContext";
 import { useWeb3Context } from "@/context/Web3Context";
 import { formatUnits } from "ethers";
 import React, { useEffect, useState } from "react";
 
 const RewardRate = () => {
   const { stakingXContract, address } = useWeb3Context();
+  const { isReload } = useStakingContext();
 
   const [rewardRate, setRewardRate] = useState<string | null>("0");
   useEffect(() => {
@@ -22,7 +24,7 @@ const RewardRate = () => {
     if (stakingXContract) {
       fetchRewaredRate();
     }
-  }, [stakingXContract, address]);
+  }, [stakingXContract, isReload, address]);
   return (
     <div className=" w-full font-semibold">
       RewardRate:{rewardRate} tokens / second

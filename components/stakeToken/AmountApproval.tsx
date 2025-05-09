@@ -19,6 +19,7 @@ const AmountApproval = () => {
     }
 
     const amountToSend = parseUnits(amount, 18).toString();
+
     console.log("Amount to send:", amountToSend); // Do something with amountToSend
     try {
       let transaction;

@@ -3,18 +3,25 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
+  --background: #f7f7f8;
   --foreground: #171717;
+  --card: #ffffff;
+  --border: #f7f7f8;
+  --input: #ffffff;
 }
 
 .dark {
-  --background: #0a0a0a;
+  --background: #000000;
   --foreground: #ededed;
+  --card: #0c0c0c;
+  --border: #3b3b3b;
+  --input: #131313;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
+
   font-family: Arial, Helvetica, sans-serif;
 }
 

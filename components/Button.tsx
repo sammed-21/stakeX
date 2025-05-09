@@ -7,6 +7,7 @@ interface ButtonProps {
   label: string; // Label for the button
   className?: string;
   disabled?: boolean;
+
   type?: "button" | "submit" | "reset"; // Optional type prop for button type
 }
 
@@ -15,6 +16,7 @@ const Button: React.FC<ButtonProps> = ({
   className,
   label,
   disabled,
+
   type = "button",
 }) => {
   return (

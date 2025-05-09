@@ -8,8 +8,8 @@ export default function Home() {
   return (
     <div className="w-full h-full min-h-[700px] flex flex-col gap-5 items-center mt-10 justify-start mx-auto">
       {/* Optional Display Panel */}
-      <DisplayPannel />
       <StakeMain />
+      <DisplayPannel />
 
       {/* Tabs for Stake and Withdraw */}
     </div>

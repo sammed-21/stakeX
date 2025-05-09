@@ -1,11 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import {
-  ethers,
-  formatEther,
-  formatUnits,
-  parseEther,
-  parseUnits,
-} from "ethers";
+import { ethers, formatUnits } from "ethers";
 import {
   getStakeFaucetContract,
   getStakingXContract,
@@ -16,11 +10,12 @@ import { useAccount, useChainId } from "wagmi";
 interface Web3State {
   provider: ethers.BrowserProvider | null;
   signer: ethers.Signer | null;
-  stakingXContract?: ethers.Contract;
-  stakingXTokenContract?: ethers.Contract;
-  stakeFaucetContract?: ethers.Contract;
-  chainId?: string | number;
-  stakeXTokenBalance?: string | number;
+  stakingXContract?: ethers.Contract | null;
+  stakingXTokenContract?: ethers.Contract | null;
+  stakeFaucetContract?: ethers.Contract | null;
+  chainId?: number | string | null;
+  stakeXSymbol: string | null;
+  stakeXTokenBalance?: string;
   loading: boolean;
   address?: string | null;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -30,12 +25,13 @@ interface Web3State {
 const defaultWeb3State: Web3State = {
   provider: null,
   signer: null,
-  stakingXContract: undefined,
-  stakingXTokenContract: undefined,
-  stakeFaucetContract: undefined,
-  chainId: undefined,
-  stakeXTokenBalance: undefined,
-  address: undefined,
+  stakingXContract: null,
+  stakingXTokenContract: null,
+  stakeFaucetContract: null,
+  chainId: null,
+  stakeXTokenBalance: "",
+  stakeXSymbol: "",
+  address: "",
   setLoading: () => {},
   loading: false,
   connectWallet: async () => {},
@@ -57,11 +53,10 @@ export const Web3ContextProvider = ({
   const [stakingXContract, setStakingXContract] = useState<ethers.Contract>();
   const [stakeFaucetContract, SetStakeFaucetContract] =
     useState<ethers.Contract>();
-  const [stakeXTokenBalance, setStakeXTokenBalance] = useState<
-    string | number
-  >();
+  const [stakeXTokenBalance, setStakeXTokenBalance] = useState<string>();
   const [chainId, setChainId] = useState<string | number>("");
   const [address, setAddress] = useState<string | null>();
+  const [stakeXSymbol, setStakeXSymbol] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [stakingXTokenContract, setStakingXTokenContract] =
     useState<ethers.Contract>();
@@ -85,16 +80,23 @@ export const Web3ContextProvider = ({
         const stakingContract = getStakingXContract(signer);
         const stakingTokenContract = getStakingXTokenContract(signer!);
         const stakeTokenBalance = await stakingTokenContract?.balanceOf(signer);
+        const stakeTokenSymbol = await stakingTokenContract.symbol();
         console.log(stakeTokenBalance);
 
         // Convert the balance to a readable format (4 significant digits)
+        const formatui = formatUnits(stakeTokenBalance);
+        console.log(formatui);
         const formattedBalance = String(
           formatUnits(stakeTokenBalance.toString(), 18)
         );
+        const fixedAmount = BigInt(
+          Math.floor(Number(formattedBalance))
+        ).toString(); // strips .0 safely
 
-        setStakeXTokenBalance(formattedBalance);
+        setStakeXTokenBalance(fixedAmount);
         const stakeFaucetContract = getStakeFaucetContract(signer);
         SetStakeFaucetContract(stakeFaucetContract);
+        setStakeXSymbol(stakeTokenSymbol);
         setChainId(chainid);
         setAddress(Address);
         setStakingXContract(stakingContract);
@@ -129,6 +131,7 @@ export const Web3ContextProvider = ({
         loading,
         address,
         stakeXTokenBalance,
+        stakeXSymbol,
         setLoading,
         stakeFaucetContract,
         stakingXTokenContract,

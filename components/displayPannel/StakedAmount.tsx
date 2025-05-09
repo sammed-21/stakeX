@@ -7,6 +7,7 @@ export const StakedAmount = () => {
   const { stakingXContract, address } = useWeb3Context();
   const [stakedAmount, setStakedAmount] = useState<string>("0");
   const { isReload } = useStakingContext();
+  console.log(isReload);
   useEffect(() => {
     const fetchStakedBalance = async () => {
       try {
